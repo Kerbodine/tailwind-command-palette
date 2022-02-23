@@ -30,7 +30,13 @@ const CommandPalette = ({ items }) => {
   console.log(filteredItems);
 
   return (
-    <Transition.Root show={isOpen} as={Fragment}>
+    <Transition.Root
+      show={isOpen}
+      as={Fragment}
+      afterLeave={() => {
+        setQuery("");
+      }}
+    >
       <Dialog onClose={setIsOpen} className="fixed inset-0 pt-[25vh]">
         <Transition.Child
           enter="ease-out duration-300"

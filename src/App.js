@@ -1,41 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import CommandPalette from "./components/CommandPalette";
 
 const App = () => {
-  const items = [
-    {
-      id: 1,
-      title: "Test",
-    },
-    {
-      id: 2,
-      title: "Test 2",
-    },
-    {
-      id: 3,
-      title: "Test 3",
-    },
-    {
-      id: 4,
-      title: "Test 4",
-    },
-    {
-      id: 5,
-      title: "Test 5",
-    },
-    {
-      id: 6,
-      title: "Test 6",
-    },
-    {
-      id: 7,
-      title: "Test 7",
-    },
-    {
-      id: 8,
-      title: "Test 8",
-    },
-  ];
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    const generateList = async () => {
+      const results = await fetch("https://randomuser.me/api/?results=48");
+      const data = await results.json();
+      const formattedData = data.results.map((result, index) => {
+        return {
+          id: index,
+          title: `${result.name.first} ${result.name.last}`,
+        };
+      });
+      setItems(formattedData);
+    };
+    generateList();
+  }, []);
 
   return (
     <div className="grid place-items-center w-screen h-screen">

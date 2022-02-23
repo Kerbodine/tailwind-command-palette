@@ -1,15 +1,18 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { Combobox, Dialog, Transition } from "@headlessui/react";
 import { BiSearch } from "react-icons/bi";
+import Fuse from "fuse.js";
 
 const CommandPalette = ({ items }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
 
+  const fuzzyItems = new Fuse(items, {
+    keys: ["title"],
+  });
+
   const filteredItems = query
-    ? items.filter((item) =>
-        item.title.toLowerCase().includes(query.toLowerCase())
-      )
+    ? fuzzyItems.search(query).map((result) => result.item)
     : items;
 
   useEffect(() => {
@@ -23,6 +26,8 @@ const CommandPalette = ({ items }) => {
       window.removeEventListener("keydown", onKeydown);
     };
   }, [isOpen]);
+
+  console.log(filteredItems);
 
   return (
     <Transition.Root show={isOpen} as={Fragment}>
